@@ -1,0 +1,5 @@
+Etherscan Rinkeby link: https://rinkeby.etherscan.io/address/0x03013e039b495bD56Ac7929a499E0680c2578C36
+
+Deployed Rinkeby contract address: 0x36d91E900F2C3d238d07eA32599C282eC6BEdEB8
+
+Deployed Rinkeby contract address: 0x9fd371bdED36B9FDED95B8506590fc9FcC4D579F

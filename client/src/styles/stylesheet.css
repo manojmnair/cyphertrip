@@ -266,5 +266,8 @@ border: 2px solid white;
   background-color: #ddd;
 }
 
-
+.box-field {
+  width: 100%;
+  display: inline-block;
+}
 

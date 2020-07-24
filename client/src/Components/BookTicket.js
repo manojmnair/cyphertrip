@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+//import { Link } from "react-router-dom";
 import Rewards from "./Rewards";
 
 
@@ -99,14 +99,7 @@ const trips = Math.floor((max_co2_emission - journey.co2_emission.value) / 100);
                     TRIP earned:{" "}
                     {trips}
                   </h6>
-                  <Link to={"/Profile"}>
-                    <input
-                      className='button'
-                      type='submit'
-                      value='Book Ticket'
-                      onClick={this.handleClick}
-                    />
-                  </Link>
+
                 </div>
               </div>
             </div>

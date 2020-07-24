@@ -6,7 +6,8 @@ function web3(state = {}, action) {
       return { ...state, connection: action.connection };
     case 'ACCOUNT_LOADED':
       return { ...state, account: action.account};
-
+    case 'BENEFICIARIES_LOADED':
+      return { ...state, beneficiaries: action.beneficiaries};
     default:
       return state;
   }
@@ -20,6 +21,8 @@ function contract(state = {}, action) {
       return { ...state, totalSupply: action.totalSupply };
     case 'BALANCE_LOADED':
       return { ...state, balance: action.balance };
+    //case 'BALANCE_UPDATED':
+      //return { ...state, balance: action.balance };
     default:
       return state;
   }

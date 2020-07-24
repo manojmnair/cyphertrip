@@ -12,6 +12,13 @@ export function accountLoaded(account){
   }
 }
 
+export function beneficiariesLoaded(beneficiaries){
+  return {
+    type: 'BENEFICIARIES_LOADED',
+    beneficiaries
+  }
+}
+
 export function contractLoaded(contract){
   return {
     type: 'CONTRACT_LOADED',
@@ -31,6 +38,12 @@ export function balanceLoaded(balance){
     balance
   }
 }
+//export function balanceUpdated(balance){
+ // return {
+   // type: 'BALANCE_UPDATED',
+    //balance
+ // }
+//}
 export function getJourneys(data) {
   return {
     type: 'GET_JOURNEYS'

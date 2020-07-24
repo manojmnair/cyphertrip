@@ -5,7 +5,7 @@ import Navbar from './Navbar';
 import Home from './Home';
 import BookTicket from './BookTicket';
 import Rewards from './Rewards';
-import Profile from './Profile';
+import RewardHistory from './RewardHistory';
 import Contact from './Contact';
 
 
@@ -19,7 +19,7 @@ class Main extends Component {
         <Route exact path='/BookTicket/:id' render={(params) => (<BookTicket {...this.props} {...params} />)} />
         <Route path='/Rewards' render={(params) => (<Rewards {...this.props} {...params} />)} />
 
-        <Route exact path='/Profile' component={Profile} />
+        <Route exact path='/RewardHistory' component={RewardHistory} />
         <Route exact path='/Contact' component={Contact} />
       </Switch>
       </div>

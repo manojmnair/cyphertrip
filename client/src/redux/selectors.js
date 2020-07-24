@@ -8,7 +8,8 @@ export const web3Selector = createSelector(web3, w => w);
 const account = state => get(state, 'web3.account', null);
 export const accountSelector = createSelector(account, a => a);
 
-
+const beneficiaries = state => get(state, 'web3.beneficiaries', []);
+export const beneficiariesSelector = createSelector(beneficiaries, a => a);
 //CONTRACT
 const contract = state => get(state, 'contract.contract', null);
 export const contractSelector = createSelector(contract, a => a);
