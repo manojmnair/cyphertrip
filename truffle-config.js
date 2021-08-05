@@ -1,4 +1,6 @@
 const path = require("path");
+//var HDWalletProvider = require("truffle-hdwallet-provider");
+//var mnemonic = "..................";
 /**
  * Use this file to configure your truffle project. It's seeded with some
  * common settings for different networks and features like migrations,
@@ -43,6 +45,16 @@ module.exports = {
     // tab if you use this network and you must also set the `host`, `port` and `network_id`
     // options below to some value.
     //
+
+//rinkeby: {
+  //    provider: function() { 
+    //   return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/v3/e38b9df90d384d3fbc6c1c53a1f9e669");
+      //},
+      //network_id: 4,
+      //gas: 4500000,
+      //gasPrice: 10000000000,
+  
+//},
     development: {
     host: "127.0.0.1",     // Localhost (default: none)
     port: 9545,            // Standard Ethereum port (default: none)

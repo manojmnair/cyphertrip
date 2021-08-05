@@ -5,15 +5,10 @@ contract("TripToken", (accounts) => {
   const name = "TripToken";
   const symbol = "TRIP";
   const owner = accounts[0];
-  //const beneficiary = accounts[1];
 
   beforeEach(async () => {
     tripToken = await TripTokenContract
       .new
-      //name,
-      //symbol
-      //beneficiary,
-      //owner
       ();
   });
 
@@ -36,11 +31,7 @@ contract("TripToken", (accounts) => {
 
   describe("totalSupply", () => {
     it("...should have a total supply of 21000000.", async () => {
-      //const tripTokenInstance = await TripToken.deployed();
-
-      // Get total supply
       const totalsupply = await tripToken.totalSupply.call();
-
       assert.equal(
         totalsupply,
         21000000,
@@ -51,10 +42,8 @@ contract("TripToken", (accounts) => {
 
   describe("when transfer is sent by another account", () => {
     it("does not able to send tokens unless owner", async () => {
-      //const tripTokenInstance = await TripToken.deployed()
-      //const expected = await greeter.greet();
       try {
-        await tripToken.transfer(accounts[2], 200, { from: accounts[1] });
+        await tripToken.transfer(accounts[2], 1, { from: accounts[1] });
       } catch (err) {
         const errorMessage = "Ownable: caller is not the owner";
         assert.equal(

@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-//import { Link } from "react-router-dom";
 import Rewards from "./Rewards";
-
 
 class BookTicket extends Component {
   constructor(props) {
@@ -14,17 +12,14 @@ class BookTicket extends Component {
   }
 
   render() {
-    //const id = this.props.match.params.id
-    //const journeys = this.props.journeys
-
     const { match, journeys } = this.props;
     const id = Number(match.params.id);
     const max_co2_emission =
       journeys.journeys.context.car_direct_path.co2_emission.value;
     const journey = journeys.journeys.journeys[id];
-const trips = Math.floor((max_co2_emission - journey.co2_emission.value) / 100);
-    //console.log(journeys.journeys.journeys)
-    //console.log(journey);
+    const trips = Math.floor(
+      (max_co2_emission - journey.co2_emission.value) / 100
+    );
 
     return (
       <div className='banner-content col-lg-12 light middle'>
@@ -95,26 +90,15 @@ const trips = Math.floor((max_co2_emission - journey.co2_emission.value) / 100);
                     CO2 emission: {Math.floor(journey.co2_emission.value)}
                   </h6>
                   <p>Max CO2 emission: {Math.floor(max_co2_emission)}</p>
-                  <h6 className='card-title'>
-                    TRIP earned:{" "}
-                    {trips}
-                  </h6>
-
+                  <h6 className='card-title'>TRIP earned: {trips}</h6>
                 </div>
               </div>
             </div>
           </div>
 
           <div className='col-sm-6'>
-
-              
-                <Rewards trips = {trips}/>
-              
- }
-
-
-
-            
+            <Rewards trips={trips} departure = {journey.departure_date_time}
+ arrival = {journey.arrival_date_time} fare = {journey.fare.total.value / 100}/>}
           </div>
         </div>
       </div>

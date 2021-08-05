@@ -8,17 +8,14 @@ export const web3Selector = createSelector(web3, w => w);
 const account = state => get(state, 'web3.account', null);
 export const accountSelector = createSelector(account, a => a);
 
-const beneficiaries = state => get(state, 'web3.beneficiaries', []);
-export const beneficiariesSelector = createSelector(beneficiaries, a => a);
-//CONTRACT
-const contract = state => get(state, 'contract.contract', null);
-export const contractSelector = createSelector(contract, a => a);
+//TOKENREWARDCONTRACT
+const tokenRewardContract = state => get(state, 'contract.tokenRewardContract', null);
+export const tokenRewardContractSelector = createSelector(tokenRewardContract, a => a);
 
-const totalSupply = state => get(state, 'contract.totalSupply', null);
-export const totalSupplySelector = createSelector(totalSupply, a => a);
+//IPFSCONTRACT
+const ipfsContract = state => get(state, 'contract.ipfsContract', null);
+export const ipfsContractSelector = createSelector(ipfsContract, a => a);
 
-const balance = state => get(state, 'contract.balanceOf', null);
-export const balanceSelector = createSelector(balance, a => a);
 //JOUNEYS
 const journeys = state => get(state, 'data.journeys', []);
 export const journeysSelector = createSelector(journeys, a => a);

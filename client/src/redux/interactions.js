@@ -1,67 +1,47 @@
 import getWeb3 from "../getWeb3";
-import { web3Loaded, contractLoaded, accountLoaded, beneficiariesLoaded, totalSupplyLoaded,  getJourneys, gotJourneys } from "./actions";
-import TripTokenContract from "../contracts/TripToken.json";
-
+//import { keyBy } from 'lodash'
+//import { web3Loaded, tokenRewardContractLoaded, ipfsContractLoaded, accountLoaded, getTickets, gotTickets, getTicket, gotTicket, ticketUpload,  ticketUploaded, errorLoaded, getJourneys, gotJourneys } from "./actions";
+import { web3Loaded, tokenRewardContractLoaded, ipfsContractLoaded, accountLoaded, getJourneys, gotJourneys } from "./actions";
+//import TripTokenContract from "../contracts/TripToken.json";
+import TokenRewardContract from "../contracts/TokenReward.json";
+import saveToIPFSContract from "../contracts/saveToIPFS.json";
 
 export const loadWeb3 = async (dispatch) => {
   const web3 = await getWeb3();
   dispatch(web3Loaded(web3));
   return web3;
 }
-
 export const loadAccount = async (dispatch, web3) => {
   const accounts = await web3.eth.getAccounts();
   const account = accounts[0];
   dispatch(accountLoaded(account));
   return account;
 }
-export const loadBeneficiaries = async (dispatch, web3) => {
-
-  const beneficiaries = await web3.eth.getAccounts();
-console.log("ben",beneficiaries);
-  dispatch(beneficiariesLoaded(beneficiaries));
-  return beneficiaries;
-}
-export const loadContract = async (dispatch, web3) => {
+export const loadTokenRewardContract = async (dispatch, web3) => {
   const networkId = await web3.eth.net.getId();
-  const deployedNetwork = TripTokenContract.networks[networkId];
-  const instance = new web3.eth.Contract(
-    TripTokenContract.abi,
+  const deployedNetwork = TokenRewardContract.networks[networkId];
+  const tokenRewardinstance = new web3.eth.Contract(
+    TokenRewardContract.abi,
     deployedNetwork && deployedNetwork.address,
   );
-  dispatch(contractLoaded(instance));
-  return instance;
+  dispatch(tokenRewardContractLoaded(tokenRewardinstance));
+  return tokenRewardinstance;
 }
-
-export const loadTotalSupply = async (dispatch, contract, web3) => {
-  //const accounts = await web3.eth.getAccounts();
-  //const account = accounts[0];
-  //const setValue = await contract.methods.set(77).send({from:account});
-  const totalSupply = await contract.methods.totalSupply().call();
-  dispatch(totalSupplyLoaded(totalSupply));
-  return totalSupply;
+export const loadipfsContract = async (dispatch, web3) => {
+  const networkId = await web3.eth.net.getId();
+  const deployedNetwork = saveToIPFSContract.networks[networkId];
+  const ipfsInstance = new web3.eth.Contract(
+    saveToIPFSContract.abi,
+    deployedNetwork && deployedNetwork.address,
+  );
+  dispatch(ipfsContractLoaded(ipfsInstance));
+  return ipfsInstance;
 }
-//export const loadBalance = async (dispatch, contract, web3) => {
-  //const accounts = await web3.eth.getAccounts();
-  //const account = accounts[0];
-//const trans = await contract.methods.transfer("0x5dd50ec7b5be3a4303fe53c1644f6b6fffcf9e5f",500).send({from:account, gas: 1000000});
-
-  //const balance = await contract.methods.balanceOf("0x5dd50ec7b5be3a4303fe53c1644f6b6fffcf9e5f").call();
-  //dispatch(balanceLoaded(balance));
-  //return balance;
-//}
-//////////////
-//export const updateBalance = async (dispatch, contract, web3) => {
-  //const accounts = await web3.eth.getAccounts();
-  //const account = accounts[0];
-
-
- // const balance = await contract.methods.balanceOf("0x5dd50ec7b5be3a4303fe53c1644f6b6fffcf9e5f").call();
-  //dispatch(balanceUpdated(balance));
- // return balance;
-//}
-
-//////////////
+//export const ticketsByIndex = keyBy(state.tickets, 'index')
+  //    const updatedTickets = action.payload.map((ticket) => {
+    //    const updatedTicket = { ...ticketsByIndex[ticket.index], ...ticket }
+      //  return updatedTicket
+      //})
 export const get_journeys = async (dispatch) => {
   dispatch(getJourneys());
 }

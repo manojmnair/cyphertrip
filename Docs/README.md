@@ -1,16 +1,22 @@
-cypherTrip
+## cypherTrip
 
-A blockchain-based User incentive scheme to promote public modes of transport
+### A blockchain-based User incentive scheme to promote public modes of transport
 
 cyphertrip aims at promoting public means of transport in order to reduce carbon emission. It is trying to incentivise those who are using public means such as bus, train or shared taxi. It does that by issuing a new token called TripCoin, "TRIP" and awarding those to commuters based on their savings on carbon emission.
 
-Installation:
-1. Clone the directory
-2. Run npm install (root directory) 
-3. cd into client, run npm install (client directory) 
-4. Start the client (npm run start (client folder): it will open at localhost:3000)
+** System requirements:
+1. Operating system: Ubuntu 18.04
+2. Node version 12.18.3
+3. Metamsk browser extension
 
-[For trip search select 01/12/2019 as date]
+** Installation:
+1. Clone the directory
+2. Run > npm install (root directory) 
+3. Run the command > truffle develop > migrate --reset
+3. cd into client, run > npm install (client directory) 
+4. Start the client (> npm run start (client folder): 
+it will open at localhost:3000)
+
 
 Solidity contracts in rootfolder/Contracts
 Compiled contracts on rootfolder/client/src/Contracts

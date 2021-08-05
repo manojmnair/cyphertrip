@@ -1,6 +1,9 @@
 .Main {
   text-align: center;
-
+}
+.Table {
+  text-align: center;
+padding:10px 10px 10px 100px;
 }
 .row {
 padding:30px;

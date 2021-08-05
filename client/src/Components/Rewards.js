@@ -1,83 +1,92 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import _ from 'lodash';
+import _ from "lodash";
 import { connect } from "react-redux";
 import { createStructuredSelector } from "reselect";
-//import { balanceUpdated } from '../redux/actions';
+import Ticket from "./Ticket";
 
 import {
   loadWeb3,
-  loadContract,
+  loadTokenRewardContract,
+  loadipfsContract,
   loadAccount,
-  loadBeneficiaries,
-  loadTotalSupply,
-  //loadBalance
 } from "../redux/interactions";
 import {
-web3Selector,
-  contractSelector,
+  web3Selector,
+  tokenRewardContractSelector,
+  ipfsContractSelector,
   accountSelector,
-  beneficiariesSelector,
-  totalSupplySelector,
-  //balanceSelector
 } from "../redux/selectors";
 import { subscribeToAccountsChanging } from "../redux/subscriptions";
-//import { updateBalance } from "../redux/updateBalance";
 class Rewards extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      balance: 0,
       beneficiary: "",
-blockNumber:0,
-tokenBalance:0,
-transfers:[]
+      blockNumber: 0,
+      tokenBalance: 0,
+      transfers: [],
+      isVisible: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
     this.getTokenBalance = this.getTokenBalance.bind(this);
-    //this.rewardTokens = this.rewardTokens.bind(this);
+    this.setbeneficiary = this.setbeneficiary.bind(this);
   }
+  setbeneficiary = async (e) => {
+    e.preventDefault();
+    const { account, tokenRewardContract } = this.props;
+    await tokenRewardContract.methods
+      .setBeneficiary(this.state.beneficiary)
+      .send({ from: account });
+  };
 
   rewardTokens = async () => {
-    const { account, beneficiaries, contract, trips } = this.props;
+    const { account, tokenRewardContract, trips } = this.props;
     const { beneficiary } = this.state;
-
-    await contract.methods
-      .transfer(`${beneficiary}`, `${trips}`)
-      .send({ from: account });
-//alert(`You are rewarded with ${trips} TRIPs`);
-    //const bals = await contract.methods.balanceOf(`${beneficiary}`).call();
-    //this.setState({ balance: bals });
+    await tokenRewardContract.methods
+      .transfer(beneficiary, `${trips}`)
+      .send({ from: account })
+      .on("receipt", async () => {
+        this.setState({ isVisible: true });
+      });
   };
+
   getTokenBalance = async () => {
-//console.log(web3);
-    const { web3, account, beneficiaries, contract, trips } = this.props;
+    const { web3, tokenRewardContract } = this.props;
     const { beneficiary } = this.state;
-
-    const bals = await contract.methods.balanceOf(`${beneficiary}`).call();
     const blockNo = await web3.eth.getBlockNumber();
-
-    //const tokenBal = await web3.eth.getBalance(`${beneficiary}`,blockNo);
-const tokenBal = await contract.methods.balanceOf(`${beneficiary}`).call({}, blockNo - 1);;
-    this.setState({ balance: bals, blockNumber: blockNo, tokenBalance: tokenBal});
+    const tokenBal = await tokenRewardContract.methods
+      .balanceOf(beneficiary)
+      .call({}, blockNo);
+    this.setState({
+      blockNumber: blockNo,
+      tokenBalance: tokenBal,
+    });
   };
 
+  printTicket = (e) => {
+    e.preventDefault();
+    console.log("Print ticket");
+  };
+  saveTicket = (e) => {
+    e.preventDefault();
+    console.log("Save ticket");
+  };
+  retrieveTicket = (e) => {
+    e.preventDefault();
+    console.log("Retrive ticket");
+  };
 
   handleClick = (e) => {
     e.preventDefault();
-//console.log(this.state.beneficiary);
-//console.log(this.props.trips);
     this.rewardTokens();
   };
-
-
 
   handleChange(event) {
     const target = event.target;
     const value = target.value;
     const name = target.name;
-
     this.setState({
       [name]: value,
     });
@@ -86,23 +95,28 @@ const tokenBal = await contract.methods.balanceOf(`${beneficiary}`).call({}, blo
   render() {
     const {
       dispatch,
-      contract,
+      tokenRewardContract,
+      ipfsContract,
       account,
-      beneficiaries,
-      totalSupply,
       trips,
+      departure,
+      arrival,
+      fare,
     } = this.props;
-const cAddress = !_.isEmpty(contract) ? contract.options.address : '';
-//const rewardhistory = cAddress ? this.rewardHistory(): {};//
-    //console.log(this.props.beneficiaries);
+    //console.log(journey);
+    //const cAddress = !_.isEmpty(contract) ? contract.options.address : "";
+    const ipfscContractAddress = !_.isEmpty(ipfsContract)
+      ? ipfsContract.options.address
+      : "";
+    const tokenRewardContractAddress = !_.isEmpty(tokenRewardContract)
+      ? tokenRewardContract.options.address
+      : "";
     const connectBlockchain = async (e) => {
       e.preventDefault();
       const Web3 = await loadWeb3(dispatch);
       await loadAccount(dispatch, Web3);
-      await loadBeneficiaries(dispatch, Web3);
-      const tripTokenContract = await loadContract(dispatch, Web3);
-      await loadTotalSupply(dispatch, tripTokenContract, Web3);
-      //await loadBalance(dispatch, tripTokenContract, Web3);
+      await loadTokenRewardContract(dispatch, Web3);
+      await loadipfsContract(dispatch, Web3);
       subscribeToAccountsChanging(dispatch, Web3);
     };
 
@@ -113,28 +127,27 @@ const cAddress = !_.isEmpty(contract) ? contract.options.address : '';
             <button
               type='submit'
               className={`w-50 btn text-truncate ${
-                contract !== null ? "disabled btn-success" : "btn-danger"
+                tokenRewardContract !== null
+                  ? "disabled btn-success"
+                  : "btn-danger"
               }`}
             >
-              {contract !== null
+              {tokenRewardContract !== null
                 ? "Blockchain Connected"
                 : "Connect Blockchain"}
             </button>
           </form>
           <hr />
-          <label>Account: {account}</label>
-          <label>cAddress: {cAddress}</label>
+          {/* <label>Account: {account}</label>
+          <label>
+            Token Reward Contract Contract Address: {tokenRewardContractAddress}
+          </label>
+          <label>IPFS Contract Address: {ipfscContractAddress}</label> */}
 
-          <p>
-            Changing accounts in Metamask should refresh this account address
-          </p>
           <div>
-            <form onSubmit={this.handleClick}>
-          <label>Your TRIP reward: {trips}</label>
-
-          <hr />
+            <form onSubmit={this.setbeneficiary}>
               <label>
-                Beneficiary address:
+                Set beneficiary
                 <input
                   name='beneficiary'
                   type='text'
@@ -142,56 +155,92 @@ const cAddress = !_.isEmpty(contract) ? contract.options.address : '';
                   onChange={this.handleChange}
                 />
               </label>
+              <input className='button' type='submit' value='Set beneficiary' />
+            </form>
+            <hr />
+            <label>Your TRIP reward: {trips}</label>
+            <hr />
+            <form onSubmit={this.handleClick}>
               <input className='button' type='submit' value='Book Ticket' />
             </form>
           </div>
           <hr />
-          <label>beneficiary: {this.state.beneficiary}</label>
-          <label>
-<button
-              type='submit'
-              className='w-30 btn text-truncate btn-info'
-              onClick={this.getTokenBalance}
-            >
-              Your balance{" "}
-            </button>:{this.state.balance}</label>
-          <label>blockNumber: {this.state.blockNumber}</label>
-          <label>tokenBalance: {this.state.tokenBalance}</label>
+          {this.state.isVisible && (
+            <>
+              <label>
+                <button
+                  type='submit'
+                  className='w-30 btn text-truncate btn-info'
+                  onClick={this.getTokenBalance}
+                >
+                  Your balance{" "}
+                </button>
+              </label>
+              <label>Block Number: {this.state.blockNumber}</label>
+              <label>Token Balance: {this.state.tokenBalance}</label>
 
-          <hr />
-          <div className = 'box-field'>
-            <button
-              type='submit'
-              className='w-30 btn text-truncate btn-info'
-style={{marginRight: '40px'}}
-              onClick={this.handleClick}
-            >
-              Your ticket{" "}
-            </button>
-            <Link to='/RewardHistory'>
-              <button
-                type='submit'
-                className='w-30 btn text-truncate btn-secondary'
-                //onClick={this.rewardHistory}
-              >
-                Reward history{" "}
-              </button>
-            </Link>
-          </div>
+              <hr />
+              <Ticket
+                trips={trips}
+                beneficiary={this.state.beneficiary}
+                departure={departure}
+                arrival={arrival}
+                fare={fare}
+              />
+              <hr />
 
-
+              <div className='box-field'>
+                <Link to='/SaveTicket'>
+                  <button
+                    type='submit'
+                    className='w-30 btn text-truncate btn-success'
+                    style={{ marginRight: "40px" }}
+                    //onClick={this.saveTicket}
+                  >
+                    Save ticket{" "}
+                  </button>
+                </Link>
+                <button
+                  type='submit'
+                  className='w-30 btn text-truncate btn-primary'
+                  style={{ marginRight: "40px" }}
+                  onClick={this.retrieveTicket}
+                >
+                  Retrieve ticket{" "}
+                </button>
+              </div>
+              <hr />
+              <div className='box-field'>
+                <button
+                  type='submit'
+                  className='w-30 btn text-truncate btn-info'
+                  style={{ marginRight: "40px" }}
+                  onClick={this.printTicket}
+                  //className= "disabled btn-info"
+                >
+                  Print ticket{" "}
+                </button>
+                <Link to='/RewardHistory'>
+                  <button
+                    type='submit'
+                    className='w-30 btn text-truncate btn-secondary'
+                  >
+                    Reward history{" "}
+                  </button>
+                </Link>
+              </div>
+            </>
+          )}
         </div>
       </>
     );
   }
 }
 const mapStateToProps = createStructuredSelector({
-web3:web3Selector,
-  contract: contractSelector,
+  web3: web3Selector,
+  tokenRewardContract: tokenRewardContractSelector,
+  ipfsContract: ipfsContractSelector,
   account: accountSelector,
-  totalSupply: totalSupplySelector,
-  beneficiaries: beneficiariesSelector,
-  //balance: balanceSelector
 });
 
 export default connect(mapStateToProps)(Rewards);
